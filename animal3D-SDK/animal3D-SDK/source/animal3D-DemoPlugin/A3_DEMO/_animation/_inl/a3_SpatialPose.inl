@@ -69,9 +69,9 @@ inline a3i32 a3spatialPoseReset(a3_SpatialPose* spatialPose)
 	if (spatialPose)
 	{
 		spatialPose->transform = a3mat4_identity;		
-		spatialPose->orientation = a3vec3_zero;
-		spatialPose->scale = a3vec3_one;
-		spatialPose->translation = a3vec3_zero;
+		spatialPose->orientation = a3vec4_zero;
+		spatialPose->scale = a3vec4_one;
+		spatialPose->translation = a3vec4_zero;
 		
 		// done
 		return -1;
@@ -84,7 +84,18 @@ inline a3i32 a3spatialPoseConvert(a3mat4* mat_out, const a3_SpatialPose* spatial
 {
 	if (mat_out && spatialPose_in)
 	{
+		// slides!
 
+		// translate matrix
+		// scale matrix
+		// rotate matrix
+		//  -> e.g. xyz: R(x) * R(y) * R(z) (actual occurence is right to left)
+		// final = T * R * S
+		
+		// quaternions
+		//  -> angle-axis
+		//  -> euler
+		// final = T * convert(Q) * S
 	}
 	return -1;
 }
@@ -108,16 +119,18 @@ inline a3i32 a3spatialPoseCopy(a3_SpatialPose* spatialPose_out, const a3_Spatial
 }
 
 // concat
-inline a3i32 a3spatialPoseConcat(a3_SpatialPose* spatialPose_out, const a3_SpatialPose* spatialPose_lhs, const a3_SpatialPose* spatialPose_rhs)
+inline a3i32 a3spatialPoseConcat(a3_SpatialPose* spatialPose_out, const a3_SpatialPose* spatialPose_lhs, const a3_SpatialPose* spatialPose_rhs, const a3boolean usingQuaternions)
 {
 	if (spatialPose_out && spatialPose_lhs && spatialPose_rhs)
 	{
 		// how do they concat?
-		// orientation -> o_lhs + o_rhs
+		// angles:
+		// orientation -> validate(o_lhs + o_rhs)
 		// scale	   -> s_lhs * s_rhs (component-wise)
 		// translation -> t_lhs + t_rhs
 
-
+		// quaternions:
+		// orientation -> o_lhs * o_rhs
 		
 		// done
 		return 1;
@@ -135,6 +148,14 @@ inline a3i32 a3spatialPoseLerp(a3_SpatialPose* spatialPose_out, const a3_Spatial
 		// orientation -> lerp (o0, o1, u)
 		// scale	   -> lerp (s0, s1, u)
 		// translation -> lerp (t0, t1, u)
+
+		// quaternion:
+		// orientation -> lerp(o0, o1, u) -> just another 4D vector
+		//					|q| < 1		  -> s = |q|^2
+		//			   -> nlerp(...)
+		//					|q| = 1
+		//			   -> slerp(..)
+		//					
 		
 		return 1;
 	}
