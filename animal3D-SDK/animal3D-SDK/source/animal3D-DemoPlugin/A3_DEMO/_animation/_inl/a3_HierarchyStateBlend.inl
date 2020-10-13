@@ -35,7 +35,10 @@ inline a3_SpatialPose* a3spatialPoseOpIdentity(a3_SpatialPose* pose_out)
 {
 	pose_out->transform = a3mat4_identity;
 	// ...
-
+	pose_out->rotation = a3vec4_zero;
+	pose_out->scale = a3vec4_one;
+	pose_out->translation = a3vec4_zero;
+	
 	// done
 	return pose_out;
 }
@@ -43,6 +46,7 @@ inline a3_SpatialPose* a3spatialPoseOpIdentity(a3_SpatialPose* pose_out)
 // pointer-based LERP operation for single spatial pose
 inline a3_SpatialPose* a3spatialPoseOpLERP(a3_SpatialPose* pose_out, a3_SpatialPose const* pose0, a3_SpatialPose const* pose1, a3real const u)
 {
+	a3real4Lerp(pose_out->rotation.v, pose0->rotation.v, pose1->rotation.v, u);
 
 	// done
 	return pose_out;
@@ -54,7 +58,8 @@ inline a3_SpatialPose* a3spatialPoseOpLERP(a3_SpatialPose* pose_out, a3_SpatialP
 // data-based reset/identity
 inline a3_SpatialPose a3spatialPoseDOpIdentity()
 {
-	a3_SpatialPose const result = { a3mat4_identity /*, ...*/ };
+	//a3_SpatialPose const result = { a3mat4_identity /*, ...*/ };
+	a3_SpatialPose const result = {a3mat4_identity, a3vec4_zero, a3vec4_one, a3vec4_zero};
 	return result;
 }
 
@@ -63,7 +68,7 @@ inline a3_SpatialPose a3spatialPoseDOpLERP(a3_SpatialPose const pose0, a3_Spatia
 {
 	a3_SpatialPose result = { 0 };
 	// ...
-
+	a3real4Lerp(result.rotation.v, pose0.rotation.v, pose1.rotation.v, u);
 	// done
 	return result;
 }
@@ -72,7 +77,7 @@ inline a3_SpatialPose a3spatialPoseDOpLERP(a3_SpatialPose const pose0, a3_Spatia
 //-----------------------------------------------------------------------------
 
 // pointer-based reset/identity operation for hierarchical pose
-inline a3_HierarchyPose* a3hierarchyPoseOpIdentity(a3_HierarchyPose* pose_out)
+inline a3_HierarchyPose* a3hierarchyPoseOpIdentity(a3_HierarchyPose* pose_out, a3size const numNodes)
 {
 
 	// done
@@ -80,7 +85,7 @@ inline a3_HierarchyPose* a3hierarchyPoseOpIdentity(a3_HierarchyPose* pose_out)
 }
 
 // pointer-based LERP operation for hierarchical pose
-inline a3_HierarchyPose* a3hierarchyPoseOpLERP(a3_HierarchyPose* pose_out, a3_HierarchyPose const* pose0, a3_HierarchyPose const* pose1, a3real const u)
+inline a3_HierarchyPose* a3hierarchyPoseOpLERP(a3_HierarchyPose* pose_out, a3size const numNodes, a3_HierarchyPose const* pose0, a3_HierarchyPose const* pose1, a3real const u)
 {
 
 	// done

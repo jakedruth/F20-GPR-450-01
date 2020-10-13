@@ -105,7 +105,7 @@ struct a3_SpatialPose
 	// final DQ (Dual Quaternion) - can be derived from all below or TR - They do animate :)
 	// dq = real number with real and dual part, each a quaternion
 	// default dq: real = (0, 0, 0, 1) + dual = (0, 0, 0, 0)
-	a3dualquat dq; // encodes: angle/axis rotation, translation - does not encode scale
+	//a3dualquat dq; // encodes: angle/axis rotation, translation - does not encode scale
 	
 	// quaternion - derived from Euler angles or angle/axis
 	//a3vec4 orientation; // encode: angle/axis rotation, uniform scale (squared magnitude)
