@@ -108,13 +108,24 @@ struct a3_SpatialPose
 	//a3dualquat dq; // encodes: angle/axis rotation, translation - does not encode scale
 	
 	// quaternion - derived from Euler angles or angle/axis
-	//a3vec4 orientation; // encode: angle/axis rotation, uniform scale (squared magnitude)
+	a3vec4 orientation; // encode: angle/axis rotation, uniform scale (squared magnitude)
 	// default quat: (0, 0, 0, 1) -> x, y, z, w
 	
 	// Raw description
 	a3vec4 rotation;
 	a3vec4 scale;
 	a3vec4 translation;
+};
+
+typedef a3real4r (*a3real4BlendOpLerp)(a3real4 p_out, a3real4 const p0, a3real4 const p1, a3real const u);
+	
+// blend operation collection for a whole pose
+struct a3_SpacialPoseBlend
+{
+	a3real4BlendOpLerp blendOpLer_orientation;
+	a3real4BlendOpLerp blendOpLer_rotation;
+	a3real4BlendOpLerp blendOpLer_scale;
+	a3real4BlendOpLerp blendOpLer_translation;
 };
 
 

@@ -35,6 +35,7 @@ inline a3_SpatialPose* a3spatialPoseOpIdentity(a3_SpatialPose* pose_out)
 {
 	pose_out->transform = a3mat4_identity;
 	// ...
+	pose_out->orientation = a3vec4_w;
 	pose_out->rotation = a3vec4_zero;
 	pose_out->scale = a3vec4_one;
 	pose_out->translation = a3vec4_zero;
@@ -47,11 +48,36 @@ inline a3_SpatialPose* a3spatialPoseOpIdentity(a3_SpatialPose* pose_out)
 inline a3_SpatialPose* a3spatialPoseOpLERP(a3_SpatialPose* pose_out, a3_SpatialPose const* pose0, a3_SpatialPose const* pose1, a3real const u)
 {
 	a3real4Lerp(pose_out->rotation.v, pose0->rotation.v, pose1->rotation.v, u);
+	a3real4Lerp(pose_out->scale.v, pose0->scale.v, pose1->scale.v, u);
+	a3real4Lerp(pose_out->translation.v, pose0->translation.v, pose1->translation.v, u);
 
+	// Quaternion
+	// lerp
+	// a3(pose_out->orientation.v, ...);
+	// slerp
+	// nlerp
+	
 	// done
 	return pose_out;
 }
 
+// concat
+//  rotation: add
+//  scale: mul
+//  translate: add
+//  quaternion: mul
+
+inline a3_SpatialPose * a3spatialPostOpConst(a3_SpatialPose * pose_inout)
+{
+	return pose_inout;
+}
+
+// copy
+inline a3_SpatialPose * a3spatialPoseOpCopy(a3_SpatialPose * pose_out, a3_SpatialPose* pose_in)
+{
+	pose_out = pose_in;
+	return pose_out;
+}
 
 //-----------------------------------------------------------------------------
 
