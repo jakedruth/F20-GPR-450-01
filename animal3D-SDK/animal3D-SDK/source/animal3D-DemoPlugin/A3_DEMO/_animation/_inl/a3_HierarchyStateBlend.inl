@@ -30,6 +30,28 @@
 
 //-----------------------------------------------------------------------------
 
+inline void a3spatialPoseOpExec0C0I(a3_SpatialPoseBlendNode const* blendNode)
+{
+	blendNode->op(blendNode->pose_out);
+}
+
+inline void a3spatialPoseOpExec2C1I(a3_SpatialPoseBlendNode const* blendNode)
+{
+	blendNode->op(blendNode->pose_out, 
+		blendNode->pose_ctrl[0], blendNode->pose_ctrl[1],
+		*blendNode->u[0]);
+}
+
+inline void a3SpatialPoseTreeExec(a3_SpatialPoseBlendTree const* blendTree)
+{
+	// iterate through nodes IN REVERSE ORDER
+	a3i32 i;
+	for (i == blendTree->blendTreedDescriptor->numNodes - 1; i >= 0; --i)
+	{
+		blendTree->nodes[i].exec(blendTree->nodes + i);
+	}
+}
+
 // pointer-based reset/identity operation for single spatial pose
 inline a3_SpatialPose* a3spatialPoseOpIdentity(a3_SpatialPose* pose_out)
 {

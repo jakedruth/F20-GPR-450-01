@@ -35,12 +35,63 @@
 extern "C"
 {
 #else	// !__cplusplus
-
+typedef struct a3_SpatialPoseBlendNode a3_SpatialPoseBlendNode;
+typedef struct a3_SpatialPoseBlendTree a3_SpatialPoseBlendTree;
 #endif	// __cplusplus
-	
+
 
 //-----------------------------------------------------------------------------
 
+// execution template
+typedef void (*a3_SpatialPoseOpExec)(a3_SpatialPoseBlendNode const* blendNode);
+void a3spatialPoseOpExec0C0I(a3_SpatialPoseBlendNode const* blendNode);
+void a3spatialPoseOpExec2C1I(a3_SpatialPoseBlendNode const* blendNode);
+void a3SpatialPoseTreeExec(a3_SpatialPoseBlendTree const* blendTree);
+
+// operation template for any spatial pose operation
+//typedef a3_SpatialPose* (*a3_SpatialPoseOp)(a3_SpatialPose* pose_out); // identity
+//typedef a3_SpatialPose* (*a3_SpatialPoseOp)(a3_SpatialPose* pose_out, a3_SpatialPose const* pose_in);
+//typedef a3_SpatialPose* (*a3_SpatialPoseOp)(a3_SpatialPose* pose_out, a3_SpatialPose const* pose_lh, a3_SpatialPose const* pose_rh);
+//typedef a3_SpatialPose* (*a3_SpatialPoseOp)(a3_SpatialPose* pose_out, a3_SpatialPose const* pose_lh, a3_SpatialPose const* pose_rh, );
+typedef a3_SpatialPose* (*a3_SpatialPoseOp)(a3_SpatialPose* pose_out, ...); // ALL OF THEM
+
+//-----------------------------------------------------------------------------
+
+// complete representation of a blend operation
+// POINTERS IMPLIES THE THING COMES FROM SOMETHING ELSE
+struct a3_SpatialPoseBlendNode
+{
+	// execution invocation
+	a3_SpatialPoseOpExec exec;
+	
+	// the operation itself
+	a3_SpatialPoseOp op;
+	
+	// output pose
+	a3_SpatialPose* pose_out; // exactly 1 ptr/ref to externally-sourced pose (target)
+
+	// control poses
+	a3_SpatialPose const* pose_ctrl[16]; // up to 16 ptrs/refs to externally-sourced pose data
+	
+	// parameters
+	a3real const* u[8]; // up to 8 pointers/refs ro externally-sourced params
+
+	// how many of the above
+	a3ui16 ctrlCount, paramCount;
+};
+
+struct a3_SpatialPoseBlendTree
+{
+	a3_Hierarchy const* blendTreedDescriptor;
+
+	a3_SpatialPoseBlendNode* nodes;
+
+	// optional: child indices
+};
+
+	
+//-----------------------------------------------------------------------------
+	
 // pointer-based reset/identity operation for single spatial pose
 a3_SpatialPose* a3spatialPoseOpIdentity(a3_SpatialPose* pose_out);
 
