@@ -114,9 +114,9 @@ struct a3_SpatialPose
 {
 	a3mat4 transformMat;
 	a3dualquat transformDQ;
-	a3vec4 rotate;
-	a3vec4 scale;
-	a3vec4 translate;
+	a3vec4 rotate;		// 1) normalize firths three columns; 2) write out formula for concatenated rotation; use trig on pertinent elements
+	a3vec4 scale;		// magnitude of first three columns
+	a3vec4 translate;	// fourth column of transform mat
 	a3vec4 user;
 };
 
